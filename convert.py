@@ -1,6 +1,7 @@
 from openpyxl import load_workbook
 import glob
 from datetime import datetime
+import json
 
 # data.json 雛形
 data = {
@@ -89,15 +90,16 @@ discharge_count = 0
 stayed_count = 0
 tiny_injury_count = 0 # 軽症
 severe_injury_count = 0 # 重症
+patients_summary_data = {}
 for f in glob.glob('./downloads/*.xlsx'):
     wb = load_workbook(f)
     ws = wb.active
     i = 0
     for row in ws.values:
-        i = i + 1
-        if i == 1:
+        i += 1
+        if i == 1: # pass header
             continue
-        total_count = total_count + 1
+        total_count += 1
         update_at = datetime.strptime(str(row[0]), "%Y%m%d%H%M")
         no = row[1]
         year = row[2]
@@ -107,8 +109,6 @@ for f in glob.glob('./downloads/*.xlsx'):
         source = row[6] # 感染源
         category = row[7] # 区分
         date_of_occurrence = row[8] # 発症日
-        if date_of_occurrence:
-            date_of_occurrence = date_of_occurrence.strftime("%Y-%m-%d")
         definite_date = row[9] # 検査確定日
         current_status = row[10] # 現在の症状
         hospital_stay = row[11] # 入院状況
@@ -124,19 +124,25 @@ for f in glob.glob('./downloads/*.xlsx'):
                 "年代": year,
                 "性別": sex,
                 "退院": discharge,
-                "date": date_of_occurrence
+                "date": definite_date.strftime("%Y-%m-%d")
             }
             data["patients"]["data"].append(patients_data)
-            patients_count = patients_count + 1
+            patients_count += 1
             if hospital_stay == "退院":
-                discharge_count = discharge_count + 1
+                discharge_count += 1
             else:
-                stayed_count = stayed_count + 1
+                stayed_count += 1
                 if current_status == "重症":
-                    severe_injury_count = severe_injury_count + 1
+                    severe_injury_count += 1
                 else:
-                    tiny_injury_count = tiny_injury_count + 1
-                    
+                    tiny_injury_count += 1
+            if definite_date in patients_summary_data:
+                patients_summary_data[definite_date] += 1
+            else:
+                patients_summary_data[definite_date] = 1
+
+
+
 # カウントをいれる
 data["main_summary"]["value"] = total_count
 data["main_summary"]["children"][0]["value"] = patients_count
@@ -144,3 +150,13 @@ data["main_summary"]["children"][0]["children"][0]["value"] = stayed_count
 data["main_summary"]["children"][0]["children"][1]["value"] = discharge_count
 data["main_summary"]["children"][0]["children"][0]["children"][0]["value"] = tiny_injury_count
 data["main_summary"]["children"][0]["children"][0]["children"][1]["value"] = severe_injury_count
+
+# patients_summary を入れる
+patients_summaries = []
+for definite_date in patients_summary_data.keys():
+    patients_summaries.append({
+        "日付": definite_date.isoformat(timespec='milliseconds')+'Z',
+        "小計": patients_summary_data[definite_date]
+    })
+data["patients_summary"]["data"] = sorted(patients_summaries, key=lambda d: d["日付"])
+print(json.dumps(data))
