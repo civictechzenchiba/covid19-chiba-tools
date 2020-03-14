@@ -83,7 +83,7 @@ data = {
     }
 }
 
-# xlsxの処理
+# 合計数の初期化
 total_count = 0
 patients_count = 0
 discharge_count = 0
@@ -91,7 +91,8 @@ stayed_count = 0
 tiny_injury_count = 0 # 軽症
 severe_injury_count = 0 # 重症
 patients_summary_data = {}
-for f in glob.glob('./downloads/*.xlsx'):
+# 健康福祉部のデータ処理
+for f in glob.glob('./health_and_welfare_department/*.xlsx'):
     wb = load_workbook(f)
     ws = wb.active
     i = 0
@@ -141,6 +142,28 @@ for f in glob.glob('./downloads/*.xlsx'):
                 patients_summary_data[target_date] += 1
             else:
                 patients_summary_data[target_date] = 1
+
+# 検査実績（データセット）の処理
+patients_summary_data = {}
+for f in glob.glob('./result_set/*.xlsx'):
+    wb = load_workbook(f)
+    ws = wb.active
+    i = 0
+    for row in ws.values:
+        i += 1
+        if i == 1: # pass header
+            continue
+        total_count += 1
+        if not row[0]: # pass empty row
+            continue
+        if not row[10] == "陽性":
+            continue
+        definite_date = row[8]
+        target_date = definite_date.date()
+        if target_date in patients_summary_data:
+            patients_summary_data[target_date] += 1
+        else:
+            patients_summary_data[target_date] = 1
 
 # カウントをいれる
 data["main_summary"]["value"] = total_count
