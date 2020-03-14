@@ -1,6 +1,6 @@
 from openpyxl import load_workbook
 import glob
-from datetime import datetime
+from datetime import datetime, date, timedelta, time
 import json
 
 # data.json 雛形
@@ -127,6 +127,7 @@ for f in glob.glob('./downloads/*.xlsx'):
                 "date": definite_date.strftime("%Y-%m-%d")
             }
             data["patients"]["data"].append(patients_data)
+            target_date = definite_date.date()
             patients_count += 1
             if hospital_stay == "退院":
                 discharge_count += 1
@@ -136,12 +137,10 @@ for f in glob.glob('./downloads/*.xlsx'):
                     severe_injury_count += 1
                 else:
                     tiny_injury_count += 1
-            if definite_date in patients_summary_data:
-                patients_summary_data[definite_date] += 1
+            if target_date in patients_summary_data:
+                patients_summary_data[target_date] += 1
             else:
-                patients_summary_data[definite_date] = 1
-
-
+                patients_summary_data[target_date] = 1
 
 # カウントをいれる
 data["main_summary"]["value"] = total_count
@@ -151,12 +150,20 @@ data["main_summary"]["children"][0]["children"][1]["value"] = discharge_count
 data["main_summary"]["children"][0]["children"][0]["children"][0]["value"] = tiny_injury_count
 data["main_summary"]["children"][0]["children"][0]["children"][1]["value"] = severe_injury_count
 
+# patients_summary_dataに0件のデータを入れる
+from_day = min(patients_summary_data.keys())
+to_day = max(patients_summary_data.keys())
+for i in range((to_day - from_day).days + 1):
+    d = from_day + timedelta(i)
+    if not d in patients_summary_data:
+        patients_summary_data[d] = 0
+
 # patients_summary を入れる
 patients_summaries = []
-for definite_date in patients_summary_data.keys():
+for target_date in patients_summary_data.keys():
     patients_summaries.append({
-        "日付": definite_date.isoformat(timespec='milliseconds')+'Z',
-        "小計": patients_summary_data[definite_date]
+        "日付": datetime.combine(target_date, time()).isoformat(timespec='milliseconds')+'Z',
+        "小計": patients_summary_data[target_date]
     })
 data["patients_summary"]["data"] = sorted(patients_summaries, key=lambda d: d["日付"])
 print(json.dumps(data))
