@@ -3,6 +3,9 @@ import glob
 from datetime import datetime, date, timedelta, time
 import json
 
+def excel_date(num):
+    return (datetime(1899, 12, 30) + timedelta(days=num))
+
 # data.json 雛形
 data = {
     # 
@@ -22,6 +25,15 @@ data = {
     "patients_summary": {
         "date": '',
         "data": []
+    },
+    # 千葉県用データ: 患者と非患者のサマリ
+    "patients_and_no_symptoms_summary": {
+        "date": "",
+        "data": {
+            "患者": [],
+            "無症状病原体保有者": []
+        },
+        "labels": []
     },
     # 退院者
     "discharges_summary": {
@@ -90,37 +102,57 @@ discharge_count = 0
 stayed_count = 0
 tiny_injury_count = 0 # 軽症
 severe_injury_count = 0 # 重症
-patients_summary_data = {}
+patients_and_no_symptoms_summary_data = {} # 千葉県用のサマリ
 # 健康福祉部のデータ処理
 for f in glob.glob('./health_and_welfare_department/*.xlsx'):
     wb = load_workbook(f)
     ws = wb.active
-    i = 0
+    inloop = False
+    target = None
     for row in ws.values:
-        i += 1
-        if i == 1: # pass header
+        if '患者' in str(row[0]):
+            target = "patient"
+        elif '無症状病原体保有者' in str(row[0]):
+            target = "no_symptom"
+        if row[1]:
+            inloop = True
+            if 'No' in str(row[1]):
+                continue
+        else:
+            inloop = False
+        if not inloop:
             continue
         total_count += 1
-        update_at = datetime.strptime(str(row[0]), "%Y%m%d%H%M")
         no = row[1]
         year = row[2]
         sex = row[3]
-        where_lived = row[4]
-        stayed_at_wuhan = row[5]
-        source = row[6] # 感染源
-        category = row[7] # 区分
-        date_of_occurrence = row[8] # 発症日
-        definite_date = row[9] # 検査確定日
-        current_status = row[10] # 現在の症状
-        hospital_stay = row[11] # 入院状況
+        where_lived = row[4] # 居住地
+        category = row[5] # 区分
+        if isinstance(row[6], int):
+            date_of_occurrence = excel_date(row[6]) # 発症日
+        else:
+            date_of_occurrence = ''
+        definite_date = excel_date(row[7]) # 検査確定日
+        current_status = row[8] # 直近の症状
+        hospital_stay = row[9] # 入院状況
         discharge = ''
         if hospital_stay == "退院":
             discharge = '〇'
-        # 陽性
-        if current_status:
+        # 陽性陰性両方ともグラフに表示する
+        target_date = definite_date.date()
+        if not target_date in patients_and_no_symptoms_summary_data:
+            patients_and_no_symptoms_summary_data[target_date] = {
+                "patients": 0,
+                "no_symptoms": 0,
+                "labels": target_date.strftime("%-m/%-d"),
+                "day": target_date
+            }
+        total_count += 1
+        # 患者
+        if target == "patient":
             patients_data = {
-                "リリース日": update_at.isoformat(timespec='milliseconds')+'Z',
-                "曜日": total_count,
+                "リリース日": definite_date.isoformat(timespec='milliseconds')+'Z', # 公表日はなくなった
+                "曜日": '',
                 "居住地": where_lived,
                 "年代": year,
                 "性別": sex,
@@ -128,7 +160,7 @@ for f in glob.glob('./health_and_welfare_department/*.xlsx'):
                 "date": definite_date.strftime("%Y-%m-%d")
             }
             data["patients"]["data"].append(patients_data)
-            target_date = definite_date.date()
+            
             patients_count += 1
             if hospital_stay == "退院":
                 discharge_count += 1
@@ -138,10 +170,11 @@ for f in glob.glob('./health_and_welfare_department/*.xlsx'):
                     severe_injury_count += 1
                 else:
                     tiny_injury_count += 1
-            if target_date in patients_summary_data:
-                patients_summary_data[target_date] += 1
-            else:
-                patients_summary_data[target_date] = 1
+            patients_and_no_symptoms_summary_data[target_date]["patients"] += 1
+        # 無感染
+        else:
+            patients_and_no_symptoms_summary_data[target_date]["no_symptoms"] += 1
+
 
 # 検査実績（データセット）の処理
 patients_summary_data = {}
@@ -153,7 +186,6 @@ for f in glob.glob('./result_set/*.xlsx'):
         i += 1
         if i == 1: # pass header
             continue
-        total_count += 1
         if not row[0]: # pass empty row
             continue
         if not row[10] == "陽性":
@@ -189,4 +221,23 @@ for target_date in patients_summary_data.keys():
         "小計": patients_summary_data[target_date]
     })
 data["patients_summary"]["data"] = sorted(patients_summaries, key=lambda d: d["日付"])
+
+# patients_summary_dataに0件のデータを入れる
+from_day = min(patients_and_no_symptoms_summary_data.keys())
+to_day = max(patients_and_no_symptoms_summary_data.keys())
+for i in range((to_day - from_day).days + 1):
+    d = from_day + timedelta(i)
+    if not d in patients_and_no_symptoms_summary_data.keys():
+        patients_and_no_symptoms_summary_data[d] = {
+            "patients": 0,
+            "no_symptoms": 0,
+            "labels": d.strftime("%-m/%-d"),
+            "day": d
+        }
+
+sorted_values = sorted(patients_and_no_symptoms_summary_data.values(), key=lambda d: d["day"])
+for d in sorted_values:
+    data["patients_and_no_symptoms_summary"]["data"]["患者"].append(d["patients"])
+    data["patients_and_no_symptoms_summary"]["data"]["無症状病原体保有者"].append(d["no_symptoms"])
+    data["patients_and_no_symptoms_summary"]["labels"].append(d["labels"])
 print(json.dumps(data))
