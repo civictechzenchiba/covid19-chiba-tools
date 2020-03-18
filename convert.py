@@ -1,18 +1,20 @@
 from openpyxl import load_workbook
 import glob
-from datetime import datetime, date, timedelta, time
+from datetime import datetime, date, time, timedelta
 import json
+from common import excel_date
 
-def excel_date(num):
-    return (datetime(1899, 12, 30) + timedelta(days=num))
+from processing.inspection_summary import parse_inspection_summary
+from processing.call_center import parse_call_center
 
 # data.json 雛形
 data = {
-    # 
+    # コールセンター相談件数
     "contacts": { 
         "date": '',
-        "data": []
+        "data": parse_call_center()
     },
+    # ?
     "querents": {
         "date": '',
         "data": []
