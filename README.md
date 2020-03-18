@@ -4,16 +4,22 @@
 
 ## 使い方
 
-- [健康福祉部データ](https://drive.google.com/file/d/14ZDQnt4d2vEejxEc8ryKmxASzWUoiOWv/view)
-- [検査実績データ](https://drive.google.com/file/d/1iwE3SzdG_m-cjrTfb4OQWTeMCSy8DEeG/view)
-
-まず、上記Google Driveからxlsxファイルをダウンロードをしておく。
-
 ```
 git clone https://github.com/civictechzenchiba/covid19-chiba-tools.git
 cd covid19-chiba-tools
-cp ~/Downloads/*千葉県_患者一覧.xlsx health_and_welfare_department/
-cp ~/Downloads/検査実績*.xlsx result_set/
+```
+
+dataディレクトリに[Google Drive](https://drive.google.com/drive/folders/1SxZqdYCx5vN2JUPycePzfbnW7L7VTiiS)から以下のxlsxファイルをダウンロードします。
+
+- 検査実施日別状況.xlsx
+- 検査実施サマリ.xlsx
+- 帰国者接触者センター相談件数-RAW.xlsx
+- コールセンター相談件数-RAW.xlsx
+- 千葉市患者発生発表数-RAW.xlsx
+- 検査実績（データセット）千葉県衛生研究所2019-nCoVラインリスト<日付>.xlsx
+- 【<日付>】千葉県_患者一覧.xlsx
+
+```
 python3 -m venv venv
 source venv/bin/activate
 pip install -U pip

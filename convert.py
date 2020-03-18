@@ -6,6 +6,9 @@ from common import excel_date
 
 from processing.inspection_summary import parse_inspection_summary
 from processing.call_center import parse_call_center
+from processing.inspection_per_date import parse_inspection_per_date
+
+inspections, inspections_summary_data, inspections_summary_labels = parse_inspection_per_date()
 
 # data.json 雛形
 data = {
@@ -49,11 +52,12 @@ data = {
     # 検査実施数
     "inspections": {
         "date": '',
-        "data": []
+        "data": inspections
     },
     "inspections_summary": {
         "date": '',
-        "data": []
+        "data": inspections_summary_data,
+        "labels": inspections_summary_labels
     },
     # 未使用？
     "better_patients_summary": {
