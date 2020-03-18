@@ -7,6 +7,7 @@ from common import excel_date
 from processing.inspection_summary import parse_inspection_summary
 from processing.call_center import parse_call_center
 from processing.inspection_per_date import parse_inspection_per_date
+from processing.querents import parse_querents
 
 inspections, inspections_summary_data, inspections_summary_labels = parse_inspection_per_date()
 
@@ -17,10 +18,10 @@ data = {
         "date": '',
         "data": parse_call_center()
     },
-    # ?
+    # 帰国者接触者センター相談件数
     "querents": {
         "date": '',
-        "data": []
+        "data": parse_querents()
     },
     # 陽性患者
     "patients": {
