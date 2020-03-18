@@ -26,6 +26,7 @@ from openpyxl import load_workbook
 import os
 import glob
 from datetime import timedelta
+from functools import reduce
 from pathlib import Path
 import sys
 sys.path.append(str(Path('__file__').resolve().parent))
@@ -156,12 +157,18 @@ def _data_to_inspections(data):
         inspections_summary_labels.append(key.strftime("%-m/%-d"))
     return inspections, inspections_summary_data, inspections_summary_labels
 
+def _total_count(data):
+    total_count = reduce(lambda x, y: x + y, [x["（小計①）"] for x in data.values()])
+    total_count += reduce(lambda x, y: x + y, [x["（小計②）"] for x in data.values()])
+    return total_count
+
 def parse_inspection_per_date():
     data = _inspection_dataset_from_chiba_pref()
     data = _inspection_list_from_chiba_city(data)
     data = _sum_data(data)
     data = _fill_data(data)
-    return  _data_to_inspections(data)
+    total_count = _total_count(data)
+    return  _data_to_inspections(data), total_count
 
 if __name__ == '__main__':
     print(parse_inspection_per_date())
