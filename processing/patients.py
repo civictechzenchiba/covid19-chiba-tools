@@ -1,5 +1,5 @@
 """
-【<日付>】千葉県_患者一覧.xlsxの処理
+【<日付>】千葉県_感染者発生状況.xlsxの処理
 """
 
 from openpyxl import load_workbook
@@ -11,7 +11,7 @@ sys.path.append(str(Path('__file__').resolve().parent))
 from common import excel_date
 
 def parse_chiba_patients_list():
-    FILENAME = "【*】千葉県_患者一覧.xlsx"
+    FILENAME = "【*】千葉県_感染者発生状況.xlsx"
     paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
     patients_count = 0 # 陽性患者数
     discharge_count = 0 # 退院
@@ -39,9 +39,9 @@ def parse_chiba_patients_list():
             inloop = False
         if not inloop:
             continue
-        no = row[1]
-        year = row[2]
-        sex = row[3]
+        no = row[1] # No.
+        year = row[2] # 年代
+        sex = row[3] # 性別
         where_lived = row[4] # 居住地
         category = row[5] # 区分
         if isinstance(row[6], int):

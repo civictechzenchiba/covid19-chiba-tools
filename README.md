@@ -17,7 +17,7 @@ dataディレクトリに[Google Drive](https://drive.google.com/drive/folders/1
 - コールセンター相談件数-RAW.xlsx
 - 千葉市患者発生発表数-RAW.xlsx
 - 検査実績（データセット）千葉県衛生研究所2019-nCoVラインリスト<日付>.xlsx
-- 【<日付>】千葉県_患者一覧.xlsx
+- 【<日付>】千葉県_感染者発生状況.xlsx
 
 ```
 python3 -m venv venv
