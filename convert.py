@@ -39,26 +39,26 @@ for d in sorted_values:
 data = {
     # コールセンター相談件数
     "contacts": { 
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": parse_call_center()
     },
     # 帰国者接触者センター相談件数
     "querents": {
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": parse_querents()
     },
     # 陽性患者
     "patients": {
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": patients_list
     },
     "patients_summary": {
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": []
     },
     # 千葉県用データ: 患者と非患者のサマリ
     "patients_and_no_symptoms_summary": {
-        "date": "",
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": {
             "患者": patients_and_no_symptoms_summary_data_patients,
             "無症状病原体保有者": patients_and_no_symptoms_summary_data_no_symptoms
@@ -67,29 +67,29 @@ data = {
     },
     # 退院者
     "discharges_summary": {
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": []
     },
     "discharges": {
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": []
     },
     # 検査実施数
     "inspections": {
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": inspections
     },
     "inspections_summary": {
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": inspections_summary_data,
         "labels": inspections_summary_labels
     },
     # 未使用？
     "better_patients_summary": {
-        "date": '',
+        "date": datetime.now().strftime('%Y/%m/%d %H:%M'),
         "data": []
     },
-    "lastUpdate": '',
+    "lastUpdate": datetime.now().strftime('%Y/%m/%d %H:%M'),
     "main_summary": {
         "attr": "検査実施人数",
         "value": total_count,
