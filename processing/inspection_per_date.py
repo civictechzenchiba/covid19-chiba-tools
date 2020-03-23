@@ -13,8 +13,7 @@
     "接触者調査": "0 ",
     "陰性確認": "0 ",
     "（小計①）": "3 ",
-    "チャーター便": "0 ",
-    "クルーズ船": "0 ",
+    "チャーター便・クルーズ便等": "0 ", # 2020/3/22データ形式変更
     "陰性確認2": "0 ",
     "（小計②）": "0 "
 },
@@ -40,8 +39,7 @@ def _empty_data(date):
         "接触者調査": 0,
         "陰性確認": 0,
         "（小計①）": 0,
-        "チャーター便": 0,
-        "クルーズ船": 0,
+        "チャーター便・クルーズ便等": 0,
         "陰性確認2": 0,
         "（小計②）": 0
     }
@@ -79,12 +77,8 @@ def _inspection_dataset_from_chiba_pref():
             data[target_date]["接触者調査"] += 1
             if negative:
                 data[target_date]["陰性確認"] += 1
-        elif category == "チャーター":
-            data[target_date]["チャーター便"] += 1
-            if negative:
-                data[target_date]["陰性確認2"] += 1
-        elif category == "クルーズ":
-            data[target_date]["クルーズ船"] += 1
+        elif category == "チャーター" or category == "クルーズ" or category == "空港検疫":
+            data[target_date]["チャーター便・クルーズ便等"] += 1
             if negative:
                 data[target_date]["陰性確認2"] += 1
     return data
@@ -111,8 +105,8 @@ def _inspection_list_from_chiba_city(data):
         data[target_date]["接触者調査"] += int(row[3] or '0')
         data[target_date]["陰性確認"] += int(row[4] or '0') # 今の所0件になってしまう
         # 小計はあとでカウント
-        data[target_date]["チャーター便"] += int(row[6] or '0')
-        data[target_date]["クルーズ船"] += int(row[7] or '0')
+        data[target_date]["チャーター便・クルーズ便等"] += int(row[6] or '0')
+        data[target_date]["チャーター便・クルーズ便等"] += int(row[7] or '0')
         data[target_date]["陰性確認2"] += int(row[8] or '0') # 今の所0件になってしまう
         # 小計はあとでカウント
     return data
@@ -122,9 +116,8 @@ def _sum_data(data):
         pt1 = data[target_date]["疑い例検査"]
         pt2 = data[target_date]["接触者調査"]
         data[target_date]["（小計①）"] = pt1 + pt2
-        pt3 = data[target_date]["チャーター便"]
-        pt4 = data[target_date]["クルーズ船"]
-        data[target_date]["（小計②）"] = pt3 + pt4
+        pt3 = data[target_date]["チャーター便・クルーズ便等"]
+        data[target_date]["（小計②）"] = pt3
     return data
 
 def _fill_data(data):
