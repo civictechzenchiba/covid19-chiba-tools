@@ -1,5 +1,5 @@
 """
-# - 検査実施日別状況.xlsx
+- 検査実施日別状況.xlsx
 - 検査実績（データセット）千葉県衛生研究所2019-nCoVラインリスト<日付>.xlsx
 
 上記を集計したものを出力
@@ -157,7 +157,7 @@ def _total_count(data):
 
 def parse_inspection_per_date():
     data = _inspection_dataset_from_chiba_pref()
-    #data = _inspection_list_from_chiba_city(data)
+    data = _inspection_list_from_chiba_city(data)
     data = _sum_data(data)
     data = _fill_data(data)
     total_count = _total_count(data)

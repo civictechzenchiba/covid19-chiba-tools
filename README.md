@@ -21,4 +21,7 @@ download.pyはdataディレクトリに[Google Drive](https://drive.google.com/d
 
 - 検査実施サマリ.xlsx
 - 検査実績（データセット）千葉県衛生研究所2019-nCoVラインリスト<日付>.xlsx
+- 検査実施日別状況.xlsx
 - 【<日付>】千葉県_感染者発生状況.xlsx
+- 帰国者接触者センター相談件数-RAW.xlsx
+- コールセンター相談件数-RAW.xlsx

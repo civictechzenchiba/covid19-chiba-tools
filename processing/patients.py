@@ -52,7 +52,7 @@ def parse_chiba_patients_list():
         current_status = row[8] # 直近の症状
         hospital_stay = row[9] # 入院状況
         discharge = ''
-        if hospital_stay == "退院":
+        if hospital_stay == "退院": # TODO 自宅待機をどう扱うか
             discharge = '〇'
         # 陽性陰性両方ともグラフに表示する
         target_date = definite_date.date()
