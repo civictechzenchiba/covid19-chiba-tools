@@ -25,6 +25,7 @@ from common import excel_date
 FILENAME = "帰国者接触者センター相談件数-RAW.xlsx"
 
 def parse_querents():
+    return [] # 一旦対象から消す
     paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
     f = os.path.join(*paths)
     wb = load_workbook(f)
@@ -52,7 +53,7 @@ def parse_querents():
             "小計": sum_call_count
         })
 
-    return results
+    #return results
 
 if __name__ == '__main__':
     print(parse_querents())
