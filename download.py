@@ -6,6 +6,10 @@ import csv
 import tempfile
 import os
 import glob
+import ssl
+
+# ssl設定
+context = ssl._create_unverified_context()
 
 def download():
     ENTRY_POINT="https://docs.google.com/spreadsheets/d/1v24qeS70ZwVtvvDBnMgGviW83O_O9-LFGi8-jLxXI9U/export?format=tsv&gid=0"
@@ -34,7 +38,7 @@ def download():
     call_center_filename = "コールセンター相談件数-RAW.xlsx"
     call_center_url = ""
 
-    with urllib.request.urlopen(ENTRY_POINT) as response:
+    with urllib.request.urlopen(ENTRY_POINT, context=context) as response:
         body = response.read().decode('UTF-8')
         r = csv.reader(body.strip().splitlines(), delimiter = '\t')
         for row in r:
@@ -83,7 +87,7 @@ def _download_each_file(filename, url):
     print(url)
     print(filename)
     output = os.path.join(*[os.path.abspath(os.path.dirname(__file__)), 'data', filename])
-    with urllib.request.urlopen(url) as response:
+    with urllib.request.urlopen(url, context=context) as response:
         with open(output, 'wb') as fp:
             shutil.copyfileobj(response, fp)
 
