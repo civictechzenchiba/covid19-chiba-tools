@@ -4,7 +4,7 @@
 
 ## 使い方
 
-```
+```bash
 git clone https://github.com/civictechzenchiba/covid19-chiba-tools.git
 cd covid19-chiba-tools
 python3 -m venv venv
@@ -14,7 +14,13 @@ pip install -r requirements.txt
 python download.py
 python convert.py | jq . > data.json
 ```
+dockerを使う場合
 
+```bash
+git clone https://github.com/civictechzenchiba/covid19-chiba-tools.git
+cd covid19-chiba-tools
+docker-compose run --rm tool
+```
 ## ファイル
 
 download.pyはdataディレクトリに[Google Drive](https://drive.google.com/drive/folders/1SxZqdYCx5vN2JUPycePzfbnW7L7VTiiS)から以下のxlsxファイルをダウンロードします。
