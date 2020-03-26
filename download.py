@@ -84,8 +84,6 @@ def _delete_data_directory_files():
 
 def _download_each_file(filename, url):
     url = url.replace('https://drive.google.com/open?id=', 'https://drive.google.com/uc?export=download&id=')
-    print(url)
-    print(filename)
     output = os.path.join(*[os.path.abspath(os.path.dirname(__file__)), 'data', filename])
     with urllib.request.urlopen(url, context=context) as response:
         with open(output, 'wb') as fp:

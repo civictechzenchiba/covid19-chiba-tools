@@ -19,7 +19,8 @@ dockerを使う場合
 ```bash
 git clone https://github.com/civictechzenchiba/covid19-chiba-tools.git
 cd covid19-chiba-tools
-docker-compose run --rm tool
+docker build -t chiba-covid19-tools .
+docker run --rm -it chiba-covid19-tools > data.json
 ```
 ## ファイル
 
