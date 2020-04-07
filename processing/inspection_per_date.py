@@ -66,7 +66,8 @@ def _inspection_dataset_from_chiba_pref():
         if not target_date in data.keys():
             data[target_date] = _empty_data(target_date)
         sample_count = row[9]
-        data[target_date]["検査検体数"] += sample_count
+        if sample_count:
+            data[target_date]["検査検体数"] += sample_count
         category = row[3]
         negative = row[10] == "陰性"
         if category == "一般":
