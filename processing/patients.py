@@ -18,6 +18,7 @@ def parse_chiba_patients_list():
     stayed_count = 0 # 入院
     tiny_injury_count = 0 # 軽症
     severe_injury_count = 0 # 重症
+    death_count = 0 # 死亡
     data = {} # 千葉県専用のグラフ用のデータ
     patients_list = [] # 患者の表の表示用
     # 健康福祉部のデータ処理
@@ -79,6 +80,8 @@ def parse_chiba_patients_list():
             patients_count += 1
             if hospital_stay == "退院":
                 discharge_count += 1
+            elif hospital_stay == "死亡":
+                death_count += 1
             else:
                 stayed_count += 1
                 if current_status == "重症":
@@ -89,4 +92,4 @@ def parse_chiba_patients_list():
         # 無感染
         else:
             data[target_date]["no_symptoms"] += 1
-    return patients_count, discharge_count, stayed_count, tiny_injury_count, severe_injury_count, data, patients_list
+    return patients_count, discharge_count, stayed_count, tiny_injury_count, severe_injury_count, death_count, data, patients_list

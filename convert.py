@@ -11,7 +11,7 @@ from processing.querents import parse_querents
 from processing.patients import parse_chiba_patients_list
 
 (inspections, inspections_summary_data, inspections_summary_labels), total_count = parse_inspection_per_date()
-patients_count, discharge_count, stayed_count, tiny_injury_count, severe_injury_count, patients_and_no_symptoms_summary_data, patients_list = parse_chiba_patients_list()
+patients_count, discharge_count, stayed_count, tiny_injury_count, severe_injury_count, death_count, patients_and_no_symptoms_summary_data, patients_list = parse_chiba_patients_list()
 
 # patients_and_no_symptoms_summary_dataに0件のデータを入れる
 from_day = min(patients_and_no_symptoms_summary_data.keys())
@@ -118,7 +118,7 @@ data = {
                     },
                     {
                         "attr": "死亡",
-                        "value": 0
+                        "value": death_count
                     }
                 ]
             }
