@@ -45,7 +45,7 @@ def _empty_data(date):
     }
 
 def _inspection_dataset_from_chiba_pref():
-    FILENAME = "検査実績（データセット）千葉県衛生研究所2019-nCoVラインリスト*.xlsx"
+    FILENAME = "検査実績*千葉県衛生研究所2019-nCoVラインリスト*.xlsx"
     """
     検査実績（データセット）の処理
     """
