@@ -24,6 +24,12 @@ from common import excel_date
 
 FILENAME = "帰国者接触者センター相談件数-RAW.xlsx"
 
+def querents_modified():
+    paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
+    f = os.path.join(*paths)
+    wb = load_workbook(f)
+    return wb.properties.modified
+
 def parse_querents():
     paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
     f = os.path.join(*paths)
