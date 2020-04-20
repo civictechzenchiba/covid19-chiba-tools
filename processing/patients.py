@@ -10,6 +10,13 @@ import sys
 sys.path.append(str(Path('__file__').resolve().parent))
 from common import excel_date
 
+def patients_modified():
+    FILENAME = "【*】千葉県_感染者発生状況.xlsx"
+    paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
+    f = glob.glob(os.path.join(*paths))[0]
+    wb = load_workbook(f)
+    return wb.properties.modified
+
 def parse_chiba_patients_list():
     FILENAME = "【*】千葉県_感染者発生状況.xlsx"
     paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]

@@ -7,6 +7,12 @@ import os
 
 FILENAME = "検査実施サマリ.xlsx"
 
+def inspections_summary_modified():
+    paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
+    f = os.path.join(*paths)
+    wb = load_workbook(f)
+    return wb.properties.modified
+
 def parse_inspection_summary():
     paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
     f = os.path.join(*paths)

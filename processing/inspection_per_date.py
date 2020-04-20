@@ -44,6 +44,13 @@ def _empty_data(date):
         "（小計②）": 0
     }
 
+def inspections_modified():
+    FILENAME = "検査実績*千葉県衛生研究所2019-nCoVラインリスト*.xlsx"
+    paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
+    f = glob.glob(os.path.join(*paths))[0]
+    wb = load_workbook(f)
+    return wb.properties.modified
+
 def _inspection_dataset_from_chiba_pref():
     FILENAME = "検査実績*千葉県衛生研究所2019-nCoVラインリスト*.xlsx"
     """
