@@ -30,8 +30,8 @@ modified_date = None
 def _empty_data(date):
     return {
         "判明日": date.strftime('%-m/%-d/%Y'),
-        "陽性確認": 0,
-        "陰性確認": 0,
+        "陽性": 0,
+        "陰性": 0,
         "合計": 0
     }
 
