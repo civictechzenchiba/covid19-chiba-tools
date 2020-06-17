@@ -7,10 +7,10 @@
 詳細なデータ
 ```
 {
-    "判明日": "1\/25\/2020",
-    "陽性確認": "0 ",
-    "陰性確認": "0 ",
-    "合計": "3 ",
+    "日付": "1\/25\/2020",
+    "陽性": "0 ",
+    "陰性": "0 ",
+    "小計": "3 ",
 },
 ```
 
@@ -29,10 +29,10 @@ modified_date = None
 
 def _empty_data(date):
     return {
-        "判明日": date.strftime('%-m/%-d/%Y'),
+        "日付": date.strftime('%-m/%-d/%Y'),
         "陽性": 0,
         "陰性": 0,
-        "合計": 0
+        "小計": 0
     }
 
 def inspections_modified():
@@ -56,12 +56,12 @@ def _inspection_dataset_from_chiba_pref():
     i = 0
     for row in ws.values:
         i += 1
-        if i == 2: # modified date
-            modified_date = row[4] #original data is  like "令和2年6月14日時点"
+        if i == 2:  # modified date TBD will use on inspections_modified() 
+            modified_date = row[4]  # original data is  like "令和2年6月14日時点"
             continue
-        if i in [1, 2, 3, 4]: # pass header
+        if i in [1, 2, 3, 4]:  # pass header
             continue
-        if not row[1]: # pass empty row
+        if not row[1]:  # pass empty row
             continue
         definite_date = row[1]
         target_date = definite_date.date()
@@ -69,7 +69,7 @@ def _inspection_dataset_from_chiba_pref():
             data[target_date] = _empty_data(target_date)
         data[target_date]["陽性"] = row[2]
         data[target_date]["陰性"] = row[3]
-        data[target_date]["合計"] = row[4]
+        data[target_date]["小計"] = row[4]
     return data
 
 def _fill_data(data):
@@ -90,20 +90,20 @@ def _data_to_inspections(data):
     """
     inspections = []
     inspections_summary_data = {
-        "県内": [],
-        "その他": []
+        "陽性": [],
+        "陰性": []
     }
     inspections_summary_labels = []
     keys = sorted(data.keys())
     for key in keys:
         inspections.append(data[key])
-        inspections_summary_data["県内"].append(data[key]["合計"])
-        inspections_summary_data["その他"].append(int(0)) # alwasy 0
+        inspections_summary_data["陽性"].append(data[key]["陽性"])
+        inspections_summary_data["陰性"].append(data[key]["陰性"])
         inspections_summary_labels.append(key.strftime("%-m/%-d"))
     return inspections, inspections_summary_data, inspections_summary_labels
 
 def _total_count(data):
-    total_count = reduce(lambda x, y: x + y, [x["合計"] for x in data.values()])
+    total_count = reduce(lambda x, y: x + y, [x["小計"] for x in data.values()])
     return total_count
 
 def parse_inspection_per_date():
