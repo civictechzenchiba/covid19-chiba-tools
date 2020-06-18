@@ -53,6 +53,7 @@ def convert(isLocal=True):
     }
 
     print(json.dumps(data))
+    return data
 
 if __name__ == '__main__':
     convert()
