@@ -35,23 +35,17 @@ def _empty_data(date):
         "小計": 0
     }
 
-def inspections_modified():
-    FILENAME = "chiba.xlsx"
-    paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
-    f = glob.glob(os.path.join(*paths))[0]
-    wb = load_workbook(f)
+def inspections_modified(filepath):
+    wb = load_workbook(filepath)
     return wb.properties.modified
 
-def _inspection_dataset_from_chiba_pref():
-    FILENAME = "chiba.xlsx"
+def _inspection_dataset_from_chiba_pref(filepath):
     SHEETNAME = "PCR検査状況"
     """
     検査実績（データセット）の処理
     """
-    paths = [os.path.abspath(os.path.dirname(__file__)), '..', 'data', FILENAME]
-    f = glob.glob(os.path.join(*paths))[0]
     data = {}
-    wb = load_workbook(f)
+    wb = load_workbook(filepath)
     ws = wb[SHEETNAME]
     i = 0
     for row in ws.values:
@@ -106,13 +100,15 @@ def _total_count(data):
     total_count = reduce(lambda x, y: x + y, [x["小計"] for x in data.values()])
     return total_count
 
-def parse_inspection_per_date():
-    data = _inspection_dataset_from_chiba_pref()
+def parse_inspection_per_date(filepath):
+    data = _inspection_dataset_from_chiba_pref(filepath)
     data = _fill_data(data)
     total_count = _total_count(data)
     return  _data_to_inspections(data), total_count
 
 if __name__ == '__main__':
-    print(parse_inspection_per_date())
+    filename = "chiba.xlsx"
+    filepath = os.path.join(*[os.path.abspath(os.path.dirname(__file__)), 'data', filename])
+    print(parse_inspection_per_date(filepath))
 
 
