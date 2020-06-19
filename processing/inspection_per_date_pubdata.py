@@ -108,7 +108,7 @@ def parse_inspection_per_date(filepath):
 
 if __name__ == '__main__':
     filename = "chiba.xlsx"
-    filepath = os.path.join(*[os.path.abspath(os.path.dirname(__file__)), 'data', filename])
+    filepath = os.path.join(*[os.path.abspath(os.path.dirname(__file__)), '../data', filename])
     print(parse_inspection_per_date(filepath))
 
 
