@@ -2,6 +2,21 @@
 - https://www.pref.chiba.lg.jp/shippei/press/2019/documents/chiba_corona_data.xlsx
 - 新型コロナウイルス感染者数（累積、公表日別）
 上記を集計したものを出力
+        # 感染者状況サマリ
+        "main_summary": {
+            "date": main_summary_date_str,
+            "target_date": target_date,
+            "patients_count": patients_count,
+            "hospital_count": hospital_count,
+            "hospital_waiting_count": hospital_waiting_count,
+            "hotel_stay_count": hotel_stay_count,
+            "home_stay_count": home_stay_count,
+            "discharge_count": discharge_count,
+            "finish_stay_count": finish_stay_count,
+            "death_count": death_count,
+            "other_count": other_count,
+            "severe_injury_count": severe_injury_count 
+        },
 
 """
 
@@ -12,16 +27,13 @@ import sys
 sys.path.append(str(Path('__file__').resolve().parent))
 
 
-def patients_modified(filepath):
+def main_summary_modified(filepath):
     wb = load_workbook(filepath)
     return wb.properties.modified
 
 
-def _patients_summary_dataset_from_chiba_pref(filepath):
+def _main_summary_dataset_from_chiba_pref(filepath):
     SHEETNAME = "新型コロナウイルス感染者数（累積、公表日別）"
-    """
-    感染者（データセット）の処理
-    """
     wb = load_workbook(filepath)
     ws = wb[SHEETNAME]
     i = 0
@@ -47,11 +59,11 @@ def _patients_summary_dataset_from_chiba_pref(filepath):
     return (target_date, patients_count, hospital_count, hospital_waiting_count, hotel_stay_count, home_stay_count, discharge_count, finish_stay_count, death_count, other_count, severe_injury_count)
 
 
-def parse_patients_per_date(filepath):
-    return _patients_summary_dataset_from_chiba_pref(filepath)
+def parse_main_summary(filepath):
+    return _main_summary_dataset_from_chiba_pref(filepath)
 
 
 if __name__ == '__main__':
     filename = "chiba.xlsx"
     filepath = os.path.join(*[os.path.abspath(os.path.dirname(__file__)), '../data', filename])
-    print(parse_patients_per_date(filepath))
+    print(parse_main_summary(filepath))
