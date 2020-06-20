@@ -58,6 +58,7 @@ def convert(isLocal=True):
         "main_summary": {
             "date": main_summary_date_str,
             "target_date": target_date,
+            "inspections_total_count": total_count,
             "patients_count": patients_count,
             "hospital_count": hospital_count,
             "hospital_waiting_count": hospital_waiting_count,
