@@ -18,6 +18,7 @@
 from openpyxl import load_workbook
 import os
 from datetime import timedelta
+from datetime import datetime
 from functools import reduce
 from pathlib import Path
 import sys
@@ -58,7 +59,14 @@ def _inspection_dataset_from_chiba_pref(filepath):
         if not row[1]:  # pass empty row
             continue
         definite_date = row[1]
-        target_date = definite_date.date()
+        # もし日付が文字列であれば
+        if (type(definite_date) == type('1月1日')):
+            month = definite_date.split('月')[0]
+            day = definite_date.split('月')[1].split('日')[0]
+            target_date = datetime(2020,int(month),int(day))
+        else:
+            target_date = definite_date.date()
+
         if target_date not in data.keys():
             data[target_date] = _empty_data(target_date)
         data[target_date]["陽性"] = row[2]
