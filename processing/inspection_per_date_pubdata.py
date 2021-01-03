@@ -18,7 +18,7 @@
 from openpyxl import load_workbook
 import os
 from datetime import timedelta
-from datetime import datetime
+from datetime import date
 from functools import reduce
 from pathlib import Path
 import sys
@@ -59,11 +59,12 @@ def _inspection_dataset_from_chiba_pref(filepath):
         if not row[1]:  # pass empty row
             continue
         definite_date = row[1]
-        # もし日付が文字列であれば
+        # 2020/6月頃にエクセルで日付でなく文字列で入力する事例が多発したので対応したコード
+        # もし日付が文字列であれば年の部分は決め打ち（年を越したので2021とする）
         if (type(definite_date) == type('1月1日')):
             month = definite_date.split('月')[0]
             day = definite_date.split('月')[1].split('日')[0]
-            target_date = datetime(2020,int(month),int(day))
+            target_date = date(2021,int(month),int(day))
         else:
             target_date = definite_date.date()
 
